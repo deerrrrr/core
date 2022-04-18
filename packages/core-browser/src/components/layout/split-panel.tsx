@@ -100,7 +100,7 @@ export const SplitPanel: React.FC<SplitPanelProps> = ({
     (accumulator, item) => accumulator + (getProp(item, 'flex') !== undefined ? getProp(item, 'flex') : 1),
     0,
   );
-  const elements: React.ReactNodeArray = [];
+  const elements: React.ReactNode[] = [];
   const resizeDelegates = React.useRef<IResizeHandleDelegate[]>([]);
   const eventBus = useInjectable<IEventBus>(IEventBus);
   const rootRef = React.useRef<HTMLElement>();
