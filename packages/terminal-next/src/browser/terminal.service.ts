@@ -2,7 +2,7 @@ import { Emitter as Dispatcher } from 'event-kit';
 
 import { Injectable, Autowired, Injector, INJECTOR_TOKEN } from '@opensumi/di';
 import { WSChannelHandler as IWSChannelHandler } from '@opensumi/ide-connection/lib/browser/ws-channel-handler';
-import { AppConfig, electronEnv, PreferenceService, OperatingSystem } from '@opensumi/ide-core-browser';
+import { AppConfig, electronEnv, PreferenceService, OperatingSystem, BackendAdapter } from '@opensumi/ide-core-browser';
 import { Emitter, ILogger, Event } from '@opensumi/ide-core-common';
 
 import {
@@ -33,6 +33,9 @@ export class NodePtyTerminalService implements ITerminalService {
   static countId = 1;
 
   private backendOs: OperatingSystem | undefined;
+
+  @Autowired(BackendAdapter)
+  adapter: BackendAdapter;
 
   @Autowired(INJECTOR_TOKEN)
   protected readonly injector: Injector;

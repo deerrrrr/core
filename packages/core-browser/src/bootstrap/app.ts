@@ -46,8 +46,10 @@ import {
 import { IElectronMainLifeCycleService } from '@opensumi/ide-core-common/lib/electron';
 
 import { createElectronClientConnection } from '..';
+import { ElectronBackend } from '../adapters/electron/index';
+import { NodeBackend } from '../adapters/node/index';
 import { ClientAppStateService } from '../application';
-import { BrowserModule, IClientApp } from '../browser-module';
+import { BrowserModule, IClientApp, BackendAdapter } from '../browser-module';
 import { ClientAppContribution } from '../common';
 import { CorePreferences } from '../core-preferences';
 import { injectCorePreferences } from '../core-preferences';
@@ -99,7 +101,10 @@ export class ClientApp implements IClientApp, IDisposable {
   private nextMenuRegistry: MenuRegistryImpl;
   private stateService: ClientAppStateService;
 
-  constructor(opts: IClientAppOpts) {
+  constructor(private opts: IClientAppOpts) {}
+
+  init() {
+    const { opts } = this;
     const {
       modules,
       connectionPath,
@@ -197,23 +202,10 @@ export class ClientApp implements IClientApp, IDisposable {
     return this.injector.get(AppLifeCycleServiceToken);
   }
 
-  /**
-   * LifeCycle
-   * 1. Prepare
-   * 2. Initialize
-   * 3. Starting
-   * 4. Ready
-   */
-  public async start(
-    container: HTMLElement | IAppRenderer,
+  protected async createBackend(
     type?: 'electron' | 'web',
     connection?: RPCMessageConnection,
-  ): Promise<void> {
-    const reporterService: IReporterService = this.injector.get(IReporterService);
-    const measureReporter = reporterService.time(REPORT_NAME.MEASURE);
-
-    this.lifeCycleService.phase = LifeCyclePhase.Prepare;
-
+  ): Promise<ElectronBackend | NodeBackend> {
     if (connection) {
       await bindConnectionService(this.injector, this.modules, connection);
     } else {
@@ -236,6 +228,41 @@ export class ClientApp implements IClientApp, IDisposable {
         this.injector.get(WSChannelHandler).replaceLogger(this.logger);
       }
     }
+
+    let backend: ElectronBackend | NodeBackend;
+    if (type === 'electron') {
+      backend = this.injector.get(ElectronBackend);
+    } else {
+      backend = this.injector.get(NodeBackend);
+    }
+
+    return backend;
+  }
+
+  /**
+   * LifeCycle
+   * 1. Prepare
+   * 2. Initialize
+   * 3. Starting
+   * 4. Ready
+   */
+  public async start(
+    container: HTMLElement | IAppRenderer,
+    type?: 'electron' | 'web',
+    connection?: RPCMessageConnection,
+  ): Promise<void> {
+    this.init();
+    const reporterService: IReporterService = this.injector.get(IReporterService);
+    const measureReporter = reporterService.time(REPORT_NAME.MEASURE);
+
+    const backend = this.createBackend(type, connection);
+    this.injector.overrideProviders({
+      token: BackendAdapter,
+      useValue: backend,
+    });
+
+    this.lifeCycleService.phase = LifeCyclePhase.Prepare;
+
     measureReporter.timeEnd('ClientApp.createConnection');
 
     this.logger = this.getLogger();

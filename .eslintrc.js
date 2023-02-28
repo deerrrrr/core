@@ -169,7 +169,7 @@ module.exports = {
             message: 'browser 不应该引用 node 下模块',
           },
           {
-            target: './packages/**/*/!(__tests__)/node/**/*',
+            target: './packages/**/*/!(__tests__|core-browser/src/adapters)/node/**/*',
             from: './packages/**/*/browser/**/*',
             message: 'node 不应该引用 browser 下模块',
           },

@@ -1,6 +1,7 @@
 import { ConstructorOf } from '@opensumi/di';
 import { ApplicationConfig, UrlProvider } from '@opensumi/ide-core-common';
 
+import { BaseBackend } from '../adapters/common/index';
 import { BrowserModule } from '../browser-module';
 import { ClientAppContribution } from '../common/common.define';
 

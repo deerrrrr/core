@@ -22,3 +22,18 @@ export abstract class BrowserModule<T = any> extends BasicModule {
   // 脱离于layout渲染的模块
   public isOverlay?: boolean;
 }
+
+export abstract class BackendAdapter {
+  abstract get clientId(): string;
+
+  abstract getExtensionConfig(): {
+    extensionCandidate: Record<string, string>;
+    // 当前是否为插件开发宿主模式
+    extensionDevelopmentHost: boolean;
+  };
+  // abstract initConnection(): Promise<RPCMessageConnection>;
+  // abstract getOS(): Promise<OS>;
+  abstract onWindowClosed(): void;
+  abstract onBrowserUnload(): void;
+  abstract onBrowserBeforeUnload(): void;
+}
