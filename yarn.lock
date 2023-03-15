@@ -2748,8 +2748,8 @@ __metadata:
     jsonc-parser: ^2.1.0
     keycode: ^2.2.0
     lodash: ^4.17.15
-    mobx: ^6.8.0
-    mobx-react-lite: ^3.4.3
+    mobx: ^5.9.4
+    mobx-react-lite: ^1.3.1
     onigasm: 2.2.2
     rc-menu: ^9.3.2
     react: ^18.0.0
@@ -2862,7 +2862,7 @@ __metadata:
     less: ^3.9.0
     less-loader: ^6.0.0
     mini-css-extract-plugin: ^0.6.0
-    mobx: ^6.8.0
+    mobx: ^5.9.4
     mobx-react-lite: ^1.3.1
     node-notifier: ^8.0.1
     null-loader: ^4.0.1
@@ -15464,25 +15464,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:^3.4.3":
-  version: 3.4.3
-  resolution: "mobx-react-lite@npm:3.4.3"
-  peerDependencies:
-    mobx: ^6.1.0
-    react: ^16.8.0 || ^17 || ^18
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 60a2580eb9a0b9988fc76959d7299f018733dc33cacaa73c45500953006d4d45e738d9ae39ccfc767ac19a75656dbc028d833282c848fbc67d8d18a2bcb5c262
-  languageName: node
-  linkType: hard
-
-"mobx@npm:^6.8.0":
-  version: 6.8.0
-  resolution: "mobx@npm:6.8.0"
-  checksum: f09bb079292ea59023a7e35a9c73ed577e3de9a0175ec3d5a2adc8192e2e3a352b29ec0981ee06d1d63f701f81bb7fc6cc19fd9089edf84a754a8a75ef00ef7f
+"mobx@npm:^5.9.4":
+  version: 5.15.7
+  resolution: "mobx@npm:5.15.7"
+  checksum: 46aa00c330a256fdde1c030cf8bab0baebc7fdfb23709884400ac486c318ce650acc336fd8f1e629b5c8680d82051f2aed4737406c4ac6fe1b2d9f3d978c4339
   languageName: node
   linkType: hard
 
