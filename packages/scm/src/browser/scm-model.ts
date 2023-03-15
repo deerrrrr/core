@@ -217,7 +217,9 @@ export class ViewModelContext extends Disposable {
   private onDidSCMRepoListChangeEmitter: Emitter<ISCMRepository[]> = new Emitter();
   public onDidSCMRepoListChange = this.onDidSCMRepoListChangeEmitter.event;
 
-  public repoList: ISCMRepository[] = [];
+  @observable
+  public repoList: ISCMRepository[] = observable.array<ISCMRepository>([]);
+
   public selectedRepo: ISCMRepository | undefined;
 
   public scmList = new Array<ISCMDataItem>();

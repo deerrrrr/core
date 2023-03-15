@@ -96,10 +96,12 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<any>> {
 
 export const allSlot: { slot: string; dom: HTMLElement }[] = [];
 
-export const SlotDecorator: React.FC<{ slot: string; color?: string; children: React.ReactChild }> = ({
-  slot,
-  ...props
-}) => {
+export const SlotDecorator: React.FC<{
+  slot: string;
+  color?: string;
+  children: React.ReactChild;
+  backgroundColor?: string;
+}> = ({ slot, ...props }) => {
   const ref = React.useRef<HTMLElement>();
   React.useEffect(() => {
     if (ref.current) {

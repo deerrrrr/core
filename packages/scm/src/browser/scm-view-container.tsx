@@ -130,6 +130,7 @@ export const SCMResourcesViewWrapper: FC<{ viewState: ViewState }> = observer((p
   if (!viewModel.selectedRepos.length) {
     return <WelcomeView viewId={SCM_WELCOME_ID} />;
   }
+
   const selectedRepo = viewModel.selectedRepos[0];
 
   if (!selectedRepo || !selectedRepo.provider) {
@@ -159,32 +160,17 @@ export const SCMViewContainer: FC<{ viewState: ViewState }> = (props) => {
   const viewModel = useInjectable<ViewModelContext>(ViewModelContext);
   const selectedRepo: ISCMRepository | undefined = viewModel.selectedRepo;
 
-  const [repoList, setRepoList] = useState<ISCMRepository[]>([]);
-
-  const updateRepoList = useCallback(() => {
-    setRepoList([...viewModel.repoList]);
-  }, [repoList, viewModel]);
-
-  useEffect(() => {
-    const disposables = new DisposableCollection();
-    disposables.push(viewModel.onDidSCMListChange(updateRepoList));
-    disposables.push(viewModel.onDidSCMRepoListChange(updateRepoList));
-    return () => {
-      disposables.dispose();
-    };
-  }, [viewModel]);
-
-  const hasMultiRepos = repoList.length > 1;
+  const hasMultiRepos = viewModel.repoList.length > 1;
 
   // title for scm panel
   const panelTitle = useMemo(
     () =>
-      repoList.length === 1 && selectedRepo
+      viewModel.repoList.length === 1 && selectedRepo
         ? // 将当前 repo 信息写到 scm panel title 中去
           `${localize('scm.title')}: ${selectedRepo.provider.label}`
         : // 使用默认 scm panel title
           localize('scm.title'),
-    [repoList, selectedRepo],
+    [viewModel.repoList, selectedRepo],
   );
 
   // title for selected repo view
@@ -209,7 +195,7 @@ export const SCMViewContainer: FC<{ viewState: ViewState }> = (props) => {
       component: SCMProvidersView,
       id: scmProviderViewId,
       name: localize('scm.provider.title'),
-      initialProps: { viewState: props.viewState, repoList, selectedRepo },
+      initialProps: { viewState: props.viewState, repoList: viewModel.repoList, selectedRepo },
       priority: 0,
     };
 
@@ -223,7 +209,7 @@ export const SCMViewContainer: FC<{ viewState: ViewState }> = (props) => {
     };
 
     return (hasMultiRepos ? [scmProviderViewConfig] : []).concat(scmRepoViewConfig);
-  }, [hasMultiRepos, repoViewTitle, selectedRepo, repoList]);
+  }, [hasMultiRepos, repoViewTitle, selectedRepo, viewModel.repoList]);
 
   return (
     <div className={styles.view}>
