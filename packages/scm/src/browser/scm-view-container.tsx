@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useMemo, useRef, useState, FC, useCallback, memo } from 'react';
+import React, { useEffect, useMemo, useRef, useState, FC, useCallback, memo, useDeferredValue } from 'react';
 
 import { ViewState } from '@opensumi/ide-core-browser';
 import { IContextKeyService, View, useInjectable } from '@opensumi/ide-core-browser';
@@ -27,7 +27,7 @@ const SCM_EXTRA_PADDING_TOP = 10;
 export const SCMResourcesView: FC<{
   repository: ISCMRepository;
   viewState: ViewState;
-}> = observer(({ repository, viewState }) => {
+}> = ({ repository, viewState }) => {
   const contextKeyService = useInjectable<IContextKeyService>(IContextKeyService);
   const menuRegistry = useInjectable<IMenuRegistry>(IMenuRegistry);
   const viewModel = useInjectable<ViewModelContext>(ViewModelContext);
@@ -120,25 +120,30 @@ export const SCMResourcesView: FC<{
       </div>
     </div>
   );
-});
+};
 
 SCMResourcesView.displayName = 'SCMResourcesView';
 
-export const SCMResourcesViewWrapper: FC<{ viewState: ViewState }> = observer((props) => {
+export const SCMResourcesViewWrapper: FC<{ viewState: ViewState }> = (props) => {
   const viewModel = useInjectable<ViewModelContext>(ViewModelContext);
+  const [repo, setRepo] = useState<ISCMRepository>();
+  const deferredRepo = useDeferredValue(repo);
 
-  if (!viewModel.selectedRepos.length) {
+  useEffect(() => {
+    viewModel.onDidSelectedRepoChange((selectedReop) => {
+      setRepo(selectedReop);
+    });
+  }, [viewModel.selectedRepo]);
+  if (!deferredRepo) {
     return <WelcomeView viewId={SCM_WELCOME_ID} />;
   }
 
-  const selectedRepo = viewModel.selectedRepos[0];
-
-  if (!selectedRepo || !selectedRepo.provider) {
+  if (!deferredRepo.provider) {
     return null;
   }
 
-  return <SCMResourcesView repository={selectedRepo} viewState={props.viewState} />;
-});
+  return <SCMResourcesView repository={deferredRepo} viewState={props.viewState} />;
+};
 
 SCMResourcesViewWrapper.displayName = 'SCMResourcesViewWrapper';
 

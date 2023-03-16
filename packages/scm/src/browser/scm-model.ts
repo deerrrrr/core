@@ -200,7 +200,6 @@ export class ViewModelContext extends Disposable {
   private readonly logger: ILogger;
 
   private onDidSelectedRepoChangeEmitter: Emitter<ISCMRepository> = new Emitter();
-
   get onDidSelectedRepoChange() {
     return this.onDidSelectedRepoChangeEmitter.event;
   }
@@ -225,9 +224,6 @@ export class ViewModelContext extends Disposable {
   public scmList = new Array<ISCMDataItem>();
 
   private _currentWorkspace: Uri;
-
-  @observable
-  public selectedRepos = observable.array<ISCMRepository>([]);
 
   @observable
   public alwaysShowActions: boolean;
@@ -363,9 +359,7 @@ export class ViewModelContext extends Disposable {
     this.onDidSCMRepoListChangeEmitter.fire(this.repoList);
   }
 
-  @action
   private changeSelectedRepos(repos: ISCMRepository[]) {
-    this.selectedRepos.replace(repos);
     const selectedRepo = repos[0];
     this.selectedRepo = selectedRepo;
     this.onDidSelectedRepoChangeEmitter.fire(selectedRepo);

@@ -69,10 +69,8 @@ class SCMRepository implements ISCMRepository {
   private _onDidFocus = new Emitter<void>();
   readonly onDidFocus: Event<void> = this._onDidFocus.event;
 
-  @observable
   private _selected = false;
 
-  @computed
   get selected(): boolean {
     return this._selected;
   }
@@ -88,7 +86,6 @@ class SCMRepository implements ISCMRepository {
     this._onDidFocus.fire();
   }
 
-  @action
   setSelected(selected: boolean): void {
     this._selected = selected;
     this._onDidChangeSelection.fire(this);
