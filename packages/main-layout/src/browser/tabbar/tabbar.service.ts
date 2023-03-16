@@ -56,7 +56,7 @@ const CONTAINER_NAME_MAP = {
 
 @Injectable({ multiple: true })
 export class TabbarService extends WithEventBus {
-  @observable currentContainerId: string;
+  @observable.ref currentContainerId = '';
 
   previousContainerId = '';
 
